@@ -23,6 +23,30 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
 
     post @sign_in_url, params: @login_params
     assert_response :success
+    content = JSON.parse(response.body)
+    id = content["data"]["id"]
+    token = response.headers['access-token']
     assert response.headers['access-token']
+  end
+
+  test "shouldn't render user profile without login" do
+    get '/api/v1/users/1'
+    assert_response(401)
+  end
+
+  test "should render user profile after logging in" do
+    post @sign_up_url, params: @signup_params
+    post @sign_in_url, params: @login_params
+    headers = response.headers
+    authenticate_params = {
+      'access-token': headers['access-token'],
+      'client': headers['client'],
+      'expiry': headers['expiry'],
+      'uid': headers['uid'],
+    }
+    get '/api/v1/users/1', params: authenticate_params
+    assert_response :success
+    content = JSON.parse(response.body)
+    assert_equal "Welcome john.doe@example.org", content["data"]["message"]
   end
 end
