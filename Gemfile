@@ -5,7 +5,7 @@ ruby '2.5.0'
 
 gem 'rails', '~> 6.0.0'
 gem 'sqlite3', '~> 1.4'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem 'devise_token_auth'
 
 # Reduces boot times through caching; required in config/boot.rb
